@@ -65,40 +65,51 @@ def onMouseEvent(event, x, y, flags, param):
                 visualImg[yBump[r], :] = 63
             for c in range(1, len(xBump)):
                 visualImg[:, xBump[c]] = 63
-
         # Add text for visualization.
         if scale > MIN_SCALE_FOR_TEXT:
             for r in range(1, len(yBump)):
                 for c in range(1, len(xBump)):
                     if grayScale:
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 0]).astype(str),
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 0]).astype(str),
                                     (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 0), 3)
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 0]).astype(str),
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 0]).astype(str),
                                     (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 255))
                     else:
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 0]).astype(str),
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 0]).astype(str),
                                     (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 0), 3)
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 0]).astype(str),
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 0]).astype(str),
                                     (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (255, 0, 0))
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 1]).astype(str),
-                                    (xBump[c], yBump[r] - 13 - 8 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 1]).astype(str),
+                                    (xBump[c], yBump[r] - 13 - 8 *
+                                     (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
                                     0.4 * scale - 1.8, (0, 0, 0), 3)
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 1]).astype(str),
-                                    (xBump[c], yBump[r] - 13 - 8 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 1]).astype(str),
+                                    (xBump[c], yBump[r] - 13 - 8 *
+                                     (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
                                     0.4 * scale - 1.8, (0, 255, 0))
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 2]).astype(str),
-                                    (xBump[c], yBump[r] - 23 - 16 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 2]).astype(str),
+                                    (xBump[c], yBump[r] - 23 - 16 *
+                                     (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
                                     0.4 * scale - 1.8, (0, 0, 0), 3)
                         cv2.putText(visualImg,
-                                    (img[yMap[yBump[r] - 1, xBump[c]], xMap[yBump[r] - 1, xBump[c]], 2]).astype(str),
-                                    (xBump[c], yBump[r] - 23 - 16 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
+                                    (img[int(yMap[yBump[r] - 1, xBump[c]]),
+                                         int(xMap[yBump[r] - 1, xBump[c]]), 2]).astype(str),
+                                    (xBump[c], yBump[r] - 23 - 16 *
+                                     (scale - 6)), cv2.FONT_HERSHEY_PLAIN,
                                     0.4 * scale - 1.8, (0, 0, 255))
         cv2.imshow('Visualizer', visualImg)
 
@@ -116,8 +127,9 @@ def imagesc(img):
 ################################
 
 if len(sys.argv) < 2:
-    print "Not enough arguments"
-    sys.exit()
+    # print "Not enough arguments"
+    # sys.exit()
+    IMG_NAME = 'test.bmp'
 else:
     IMG_NAME = str(sys.argv[1])
 
