@@ -24,14 +24,14 @@ def onMouseEvent(event, x, y, flags, param):
     global scale, xMap, yMap
     pointX = xMap[y, x]
     pointY = yMap[y, x]
-
+    print('event:', event,'x:',x,'y:',y,'flag:',flags,'para:',param)
     # Change scale.
     scaleChanged = False
-    if event == cv2.EVENT_LBUTTONDOWN:
+    if event == cv2.EVENT_MOUSEWHEEL and flags > 0:
         if scale < SCALE_MAX:
             scale = scale + 1
             scaleChanged = True
-    elif event == cv2.EVENT_RBUTTONDOWN:
+    elif event == cv2.EVENT_MOUSEWHEEL and flags < 0:
         if scale > SCALE_MIN:
             scale = scale - 1
             scaleChanged = True
@@ -141,7 +141,7 @@ else:
 SCALE_MIN = 1
 SCALE_MAX = 8
 MIN_SCALE_FOR_LINES = 4
-MIN_SCALE_FOR_TEXT = 5
+MIN_SCALE_FOR_TEXT = 4
 
 
 ################################
@@ -179,7 +179,7 @@ for r in range(0, size[0]):
 # Pipeline.
 ################################
 
-cv2.namedWindow('Visualizer')
+cv2.namedWindow('Visualizer', cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('Visualizer', onMouseEvent)
 visualImg = cv2.remap(imgScaled, xMap, yMap, cv2.INTER_NEAREST)
 cv2.imshow('Visualizer', visualImg)
