@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
+import sys
 
 
 def onMouseEvent(event, x, y, flags, param):
     global scale, xMap, yMap
     pointX = xMap[y, x]
     pointY = yMap[y, x]
-    # Change scale.
+    # Change sc
     scaleChanged = False
     if event == cv2.EVENT_MOUSEWHEEL and flags > 0:
         if scale < SCALE_MAX:
@@ -89,7 +90,11 @@ def imagesc(img):
 ################################
 # Image inputs.
 ################################
-IMG_NAME = 'test.bmp'
+if len(sys.argv) < 2:
+    print("Not enough arguments")
+    sys.exit()
+else:
+    IMG_NAME = str(sys.argv[1])
 
 ################################
 # Constants.
