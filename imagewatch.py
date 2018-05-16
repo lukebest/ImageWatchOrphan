@@ -7,6 +7,7 @@ def onMouseEvent(event, x, y, flags, param):
     global scale, xMap, yMap
     pointX = xMap[y, x]
     pointY = yMap[y, x]
+    print('event:',event,'flags:',flags)
     # Change sc
     scaleChanged = False
     if event == cv2.EVENT_MOUSEWHEEL and flags > 0:
@@ -27,8 +28,10 @@ def onMouseEvent(event, x, y, flags, param):
             for c in range(0, size[1]):
                 yMap[r, c] = r
 
-    # Compute new interpolation map.
-    if scaleChanged:
+    visualImg_clone = cv2.remap(imgScaled, xMap, yMap, cv2.INTER_NEAREST)
+
+# Compute new interpolation map.
+    if scaleChanged or flags == 1:
         xBump = ()
         yBump = ()
         for r in range(0, size[0]):
@@ -47,6 +50,7 @@ def onMouseEvent(event, x, y, flags, param):
                 visualImg[yBump[r], :] = 63
             for c in range(1, len(xBump)):
                 visualImg[:, xBump[c]] = 63
+
         # Add text for visualization.
         if scale > MIN_SCALE_FOR_TEXT:
             for r in range(1, len(yBump)):
@@ -54,13 +58,6 @@ def onMouseEvent(event, x, y, flags, param):
                     imgr = int(yMap[yBump[r] - 1, xBump[c]])
                     imgc = int(xMap[yBump[r] - 1, xBump[c]])
                     if grayScale:
-                        # print row
-                        cv2.putText(visualImg, str(imgr), (xBump[c], yBump[r] - 23 - 16 * (
-                            scale - 6)), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (255, 0, 0))
-                        # print col
-                        cv2.putText(visualImg, str(imgc), (xBump[c], yBump[r] - 13 - 8 * (
-                            scale - 6)), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (255, 0, 0))
-                        # print value
                         cv2.putText(visualImg, (img[imgr, imgc, 0]).astype(
                             str), (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 255))
                     else:
@@ -76,7 +73,34 @@ def onMouseEvent(event, x, y, flags, param):
                             str), (xBump[c], yBump[r] - 23 - 16 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 0), 3)
                         cv2.putText(visualImg, (img[imgr, imgc, 2]).astype(
                             str), (xBump[c], yBump[r] - 23 - 16 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 255))
-        cv2.imshow('GoodixImageWatch', visualImg)
+        visualImg_clone = cv2.copyMakeBorder(visualImg,0,0,0,0,cv2.BORDER_REPLICATE)
+    if event == cv2.EVENT_MOUSEMOVE:
+        xBump = ()
+        yBump = ()
+        for r in range(0, size[0]):
+            if (yMap[r, 0] == yMap[r - 1, 0]) == False:
+                yBump = yBump + (r,)
+        for c in range(0, size[1]):
+            if (xMap[0, c] == xMap[0, c - 1]) == False:
+                xBump = xBump + (c,)
+
+        # Add lines for visualization.
+        if scale > MIN_SCALE_FOR_LINES:
+            for r in range(1, len(yBump)):
+                visualImg_clone[yBump[r], :] = 63
+            for c in range(1, len(xBump)):
+                visualImg_clone[:, xBump[c]] = 63
+        if scale > MIN_SCALE_FOR_TEXT:
+            for r in range(1, len(yBump)):
+                for c in range(1, len(xBump)):
+                    imgr = int(yMap[yBump[r] - 1, xBump[c]])
+                    imgc = int(xMap[yBump[r] - 1, xBump[c]])
+                    if grayScale:
+                        cv2.putText(visualImg_clone, (img[imgr, imgc, 0]).astype(
+                            str), (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 255))
+        cv2.putText(visualImg_clone, str(int(pointY))+','+str(int(pointX)), (x,y), cv2.FONT_HERSHEY_PLAIN, 0.6, (255, 0, 0))
+    cv2.imshow('GoodixImageWatch', visualImg_clone)
+
 
 
 def imagesc(img):
@@ -138,7 +162,7 @@ for r in range(0, size[0]):
     for c in range(0, size[1]):
         yMap[r, c] = r
 
-cv2.namedWindow('GoodixImageWatch', cv2.WINDOW_GUI_EXPANDED)
+cv2.namedWindow('GoodixImageWatch', cv2.WINDOW_GUI_EXPANDED + cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('GoodixImageWatch', onMouseEvent)
 visualImg = cv2.remap(imgScaled, xMap, yMap, cv2.INTER_LINEAR)
 cv2.imshow('GoodixImageWatch', visualImg)
