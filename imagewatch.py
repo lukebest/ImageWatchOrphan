@@ -1,13 +1,18 @@
 import cv2
 import numpy as np
 import sys
+'''
+About : An orphan ImageWatch Tool like Visual Studio ImageWatch plugin.
+Usage : README.md
+Author: Luke Liu
+'''
 
 
 def onMouseEvent(event, x, y, flags, param):
     global scale, xMap, yMap
     pointX = xMap[y, x]
     pointY = yMap[y, x]
-    print('event:',event,'flags:',flags)
+    print('event:', event, 'flags:', flags)
     # Change sc
     scaleChanged = False
     if event == cv2.EVENT_MOUSEWHEEL and flags > 0:
@@ -73,7 +78,8 @@ def onMouseEvent(event, x, y, flags, param):
                             str), (xBump[c], yBump[r] - 23 - 16 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 0), 3)
                         cv2.putText(visualImg, (img[imgr, imgc, 2]).astype(
                             str), (xBump[c], yBump[r] - 23 - 16 * (scale - 6)), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 255))
-        visualImg_clone = cv2.copyMakeBorder(visualImg,0,0,0,0,cv2.BORDER_REPLICATE)
+        visualImg_clone = cv2.copyMakeBorder(
+            visualImg, 0, 0, 0, 0, cv2.BORDER_REPLICATE)
     if event == cv2.EVENT_MOUSEMOVE:
         xBump = ()
         yBump = ()
@@ -98,9 +104,9 @@ def onMouseEvent(event, x, y, flags, param):
                     if grayScale:
                         cv2.putText(visualImg_clone, (img[imgr, imgc, 0]).astype(
                             str), (xBump[c], yBump[r] - 3), cv2.FONT_HERSHEY_PLAIN, 0.4 * scale - 1.8, (0, 0, 255))
-        cv2.putText(visualImg_clone, str(int(pointY))+','+str(int(pointX)), (x,y), cv2.FONT_HERSHEY_PLAIN, 0.6, (255, 0, 0))
+        cv2.putText(visualImg_clone, str(int(pointY)) + ',' +
+                    str(int(pointX)), (x, y), cv2.FONT_HERSHEY_PLAIN, 0.6, (255, 0, 0))
     cv2.imshow('GoodixImageWatch', visualImg_clone)
-
 
 
 def imagesc(img):
@@ -162,7 +168,8 @@ for r in range(0, size[0]):
     for c in range(0, size[1]):
         yMap[r, c] = r
 
-cv2.namedWindow('GoodixImageWatch', cv2.WINDOW_GUI_EXPANDED + cv2.WINDOW_NORMAL)
+cv2.namedWindow('GoodixImageWatch',
+                cv2.WINDOW_GUI_EXPANDED + cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('GoodixImageWatch', onMouseEvent)
 visualImg = cv2.remap(imgScaled, xMap, yMap, cv2.INTER_LINEAR)
 cv2.imshow('GoodixImageWatch', visualImg)
